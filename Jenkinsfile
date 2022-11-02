@@ -15,7 +15,7 @@ pipeline {
         stage('deploy') {
             steps {
                 sshagent(credentials : ['terraform']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@3.84.157.118 docker run -itd -p 8082:8081 jayak8309101680/frontend:v5'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@34.239.106.195 docker run -itd -p 8082:8081 jayak8309101680/frontend:v5'
                 }
             }
         }
