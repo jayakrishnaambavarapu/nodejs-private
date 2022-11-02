@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    environment {
-        jayakrsna=credentials('docker-credentials')
-    }
+    
 
     stages {
         
@@ -14,18 +12,22 @@ pipeline {
         stage('build') {
             steps {
           
-            sh 'docker build -t sample1 .'
-            sh 'docker tag sample1 jayak8309101680/frontend:v5'
+            sh 'docker build -t nodejs-sample-app .'
+            sh 'docker tag nodejs-sample-app public.ecr.aws/u2e2e7i0/nodejs-app:v1'
             
-            sh 'echo $jayakrsna_PSW | docker login -u $jayakrsna_USR --password-stdin'
-            sh 'docker push jayak8309101680/frontend:v5'
+            script {
+                    docker.withRegistry("https://public.ecr.aws/u2e2e7i0/", "ecr:us-east-1:aws-credentials") {
+                        docker.image("public.ecr.aws/u2e2e7i0/nodejs-app:v1").push()
+                    }
+                }
+            
             
             }
         }
         stage('deploy to app host') {
             steps {
-                sshagent(credentials : ['terraform']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@34.239.106.195 docker run -itd -p 8082:8081 jayak8309101680/frontend:v5'
+                sshagent(credentials : ['app']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@10.0.4.169 docker run -itd -p 8080:8081 public.ecr.aws/u2e2e7i0/nodejs-app:v1'
                 }
             }
         }
