@@ -7,16 +7,16 @@ pipeline {
         stage('git') {
             steps {
                 checkout scm
+            }
         }
         
         stage('build') {
             steps {
-          
-            sh 'docker build -t nodejs-sample-app .'
-            sh 'docker tag nodejs-sample-app public.ecr.aws/u2e2e7i0/nodejs-app:v1'
+                sh 'docker build -t nodejs-sample-app .'
+                sh 'docker tag nodejs-sample-app public.ecr.aws/u2e2e7i0/nodejs-app:v1'
             
-            script {
-                    docker.withRegistry("https://public.ecr.aws/u2e2e7i0/", "ecr:us-east-1:aws-credentials") {
+                script {
+                    docker.withRegistry("https://public.ecr.aws/u2e2e7i0/", "ecr:us-east-1:aws-credentials") { 
                         docker.image("public.ecr.aws/u2e2e7i0/nodejs-app:v1").push()
                     }
                 }
