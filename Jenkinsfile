@@ -12,7 +12,7 @@ pipeline {
             sh 'docker build -t sample1 .'
             sh 'docker tag sample1 jayak8309101680/frontend:v5'
             
-            sh 'echo jayakrsna_PSW | docker login -u jayakrsna_USR --password-stdin'
+            sh 'echo $jayakrsna_PSW | docker login -u $jayakrsna_USR --password-stdin'
             sh 'docker push jayak8309101680/frontend:v5'
             
             }
