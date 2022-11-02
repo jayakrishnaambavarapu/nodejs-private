@@ -8,6 +8,8 @@ pipeline {
           
             sh 'docker build -t sample1 .'
             sh 'docker tag sample1 jayak8309101680/frontend:v5'
+            
+            sh 'docker login -u jayak8309101680 -p "Ak18@&deb"'
             sh 'docker push jayak8309101680/frontend:v5'
             
             }
