@@ -13,12 +13,12 @@ pipeline {
         stage('build') {
             steps {
                 sh 'docker build -t nodejs-sample-app .'
-                sh 'docker tag nodejs-sample-app public.ecr.aws/u2e2e7i0/nodejs-app:v1'
-                sh 'docker push public.ecr.aws/u2e2e7i0/nodejs-app:v1'
+                sh 'docker tag nodejs-sample-app 587173959192.dkr.ecr.us-east-1.amazonaws.com/sample:v1'
+               
             
                 script {
-                    docker.withRegistry("https://public.ecr.aws/u2e2e7i0", "ecr:us-east-1:aws-credentials") { 
-                        docker.image("public.ecr.aws/u2e2e7i0/nodejs-app:v1").push()
+                    docker.withRegistry("https://587173959192.dkr.ecr.us-east-1.amazonaws.com", "ecr:us-east-1:aws-credentials") { 
+                        docker.image("587173959192.dkr.ecr.us-east-1.amazonaws.com/sample:v1").push()
                     }
                 }
             
@@ -28,7 +28,7 @@ pipeline {
         stage('deploy to app host') {
             steps {
                 sshagent(credentials : ['app']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@10.0.4.169 docker run -itd -p 8080:8081 public.ecr.aws/u2e2e7i0/nodejs-app:v1'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@10.0.4.169 docker run -itd -p 8080:8081 587173959192.dkr.ecr.us-east-1.amazonaws.com/sample'
                 }
             }
         }
